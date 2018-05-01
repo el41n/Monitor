@@ -5,7 +5,8 @@
 class Hardware
 {
 public:
-    Hardware();
+    virtual int getUsage()=0;
+    //virtual int getTemperature();
 };
 
 #endif // HARDWARE_H

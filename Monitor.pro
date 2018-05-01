@@ -25,10 +25,37 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        hardware.cpp \
+        cpu.cpp \
+        gpu.cpp \
+        systemInfo.cpp \
+        architecture.cpp \
+        architectureproxy.cpp \
+        family6arch.cpp \
+        bigclientcores.cpp
+
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+        hardware.h \
+        cpu.h \
+        gpu.h \
+        systemInfo.h \
+        architecture.h \
+        architectureproxy.h \
+        family6arch.h \
+        bigclientcores.h
+
+
+
+
 
 FORMS += \
         mainwindow.ui
+
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/R384-developer/x86/ -lnvapi
+
+INCLUDEPATH += $$PWD/R384-developer
