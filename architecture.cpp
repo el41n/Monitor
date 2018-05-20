@@ -209,7 +209,7 @@ __get_cpuid_count (unsigned int __leaf, unsigned int __subleaf,
   return 1;
 }
 
-QString Architecture::vendorMessage()
+void Architecture::calculateVendorMessage()
 {
     unsigned int a,b,c,d,leaf;
     a=b=c=d=leaf=0;
@@ -244,7 +244,7 @@ QString Architecture::vendorMessage()
     mes.append(registerToMessage(b));
     mes.append(registerToMessage(c));
     mes.append(registerToMessage(d));
-    return mes;
+    vendorMessage = mes;
 }
 
 QString Architecture::getMicroArchitecture()
@@ -276,7 +276,7 @@ QString Architecture::registerToMessage(unsigned int registerValue)
     return mes;
 }
 
-void Architecture::setLeaf01H()
+void Architecture::calculateProcToplogy()
 {
     unsigned int a,b,c,d,leaf;
     a=b=c=d=leaf=0;
@@ -317,10 +317,110 @@ void Architecture::setLeaf01H()
     buffer = buffer << 28;
     buffer = buffer >> 28;
     stepping = buffer;
+}
+
+void Architecture::calculateCacheInfo()
+{
+    unsigned int a,b,c,d,leaf, subleaf;
+    a=b=c=d=leaf=0;
+    leaf = 0x02;
+
+    int error = __get_cpuid(leaf,&a,&b,&c,&d);
+    if(!error)
+    {
+       //
+    }
+
+    unsigned int buffer = b;
+    buffer = buffer & 0x000000ff;
+    if(buffer == 0xff)
+    {
+        for(int i=0; i < 4; i++)
+        {
+            leaf = 0x4;
+            subleaf = i;
+
+            int error = __get_cpuid_count(leaf, subleaf,&a,&b,&c,&d);
+            if(!error)
+            {
+               //
+            }
+
+            unsigned int ways, partitions, lineSize, sets, cache;
+            ways = partitions = lineSize = b;
+            sets = c + 1;
+
+            ways = ways >> 22;
+            ways ++;
+
+            partitions = partitions << 10;
+            partitions = partitions >> 22;
+            partitions ++;
+
+            lineSize = lineSize & 0xfff;
+            lineSize ++;
+
+            cache = ways * partitions * lineSize * sets;
+            cache ++;
+
+            switch(i)
+            {
+            case 0:
+                L1dataCache = cache;
+                break;
+            case 1:
+                L1instructionCache = cache;
+                break;
+            case 2:
+                L2cache = cache;
+                break;
+            case 3:
+                L3cache = cache;
+                break;
+            }
+        }
+    }
 
 
+}
 
+void Architecture::calculateProcCores()
+{
+    unsigned int a,b,c,d,leaf, subleaf;
+    a=b=c=d=leaf=0;
+    leaf = 0x01;
 
+    int error = __get_cpuid(leaf,&a,&b,&c,&d);
+    if(!error)
+    {
+       //
+    }
+
+    unsigned int corePlusSMTIDMaxCnt;
+    corePlusSMTIDMaxCnt = b;
+    corePlusSMTIDMaxCnt = corePlusSMTIDMaxCnt & 0x00ff0000;
+    corePlusSMTIDMaxCnt = corePlusSMTIDMaxCnt >> 16;
+
+    leaf = 0x04;
+    subleaf = 0;
+
+    error = __get_cpuid_count(leaf,subleaf,&a,&b,&c,&d);
+    if(!error)
+    {
+       //
+    }
+
+    unsigned int coreIDMaxCnt;
+    coreIDMaxCnt = a;
+    coreIDMaxCnt = coreIDMaxCnt >> 26;
+    coreIDMaxCnt ++;
+
+    cores = corePlusSMTIDMaxCnt / coreIDMaxCnt;
+}
+
+QString Architecture::getVendorMessage()
+{
+    return vendorMessage;
 }
 
 void Architecture::setMicroArchitecture(QString newMicroArchitecture)
@@ -331,5 +431,30 @@ void Architecture::setMicroArchitecture(QString newMicroArchitecture)
 void Architecture::setCore(QString newCore)
 {
     core = newCore;
+}
+
+unsigned int Architecture::getCacheL1DataInfo()
+{
+    return L1dataCache;
+}
+
+unsigned int Architecture::getCacheL1InstructionInfo()
+{
+    return L1instructionCache;
+}
+
+unsigned int Architecture::getCacheL2Info()
+{
+    return L2cache;
+}
+
+unsigned int Architecture::getCacheL3Info()
+{
+    return L3cache;
+}
+
+unsigned int Architecture::getProcCores()
+{
+    return cores;
 }
 

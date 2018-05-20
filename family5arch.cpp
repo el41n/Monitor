@@ -1,9 +1,5 @@
 #include "family5arch.h"
 
-Family5Arch::Family5Arch()
-{
-
-}
 
 bool Family5Arch::mapArchitecture()
 {

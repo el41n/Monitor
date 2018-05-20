@@ -64,6 +64,8 @@ QString systemInformation::getProcessorType()
 void systemInformation::getProcID()
 {
 }
+
+
 typedef BOOL (WINAPI *LPFN_GLPI)(
     PSYSTEM_LOGICAL_PROCESSOR_INFORMATION,
     PDWORD);

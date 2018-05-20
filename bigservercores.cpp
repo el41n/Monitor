@@ -60,7 +60,7 @@ bool BigServerCores::mapArchitecture()
                   setMicroArchitecture("Westmere(Server)");
                   setCore("Gulftown");
                   return true;
-              case 0x7:
+              case 0x8:
                   setMicroArchitecture("Sandy Bridge(Server)");
                   setCore("E");
                   return true;

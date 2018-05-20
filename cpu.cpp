@@ -103,9 +103,9 @@ void CPU::getProcessUsageSlot()
     }
 }
 
-void CPU::getUsageInThread(QThread &cpuThread)
+void CPU::getUsageInThread(QThread &thread)
 {
-    connect(&cpuThread, SIGNAL(started()), this, SLOT(getUsageSlot()));
+    connect(&thread, SIGNAL(started()), this, SLOT(getUsageSlot()));
 }
 
 void CPU::getProcessUsageInThread(QThread &cpuThread, int processID)

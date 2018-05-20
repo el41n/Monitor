@@ -11,12 +11,12 @@ class CPU : public QObject
 public:
     int getUsage();
     int getProcessUsage(int procHandler);
-    void getUsageInThread(QThread &cpuThread);
+    void getUsageInThread(QThread &thread);
     void getProcessUsageInThread(QThread &cpuThread, int processID);
     void stop();
 
     explicit CPU(QObject *parent = 0);
-    virtual ~CPU() {}
+    virtual ~CPU() {};
 
 public slots:
     void getUsageSlot();

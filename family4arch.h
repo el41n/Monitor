@@ -3,10 +3,8 @@
 
 #include "architecture.h"
 
-class Family4Arch : Architecture
+class Family4Arch : public Architecture
 {
-public:
-    Family4Arch();
 protected:
     bool mapArchitecture();
 };

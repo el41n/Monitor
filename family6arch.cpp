@@ -22,5 +22,6 @@ bool Family6Arch::mapArchitecture()
         this->setCore("Unknown");
         return false;
     }
+
     delete bcCore;
 }

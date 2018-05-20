@@ -6,7 +6,6 @@
 class BigClientCores : public Family6Arch
 {
 public:
-    BigClientCores();
     bool mapArchitecture();
 };
 

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +33,16 @@ SOURCES += \
         architecture.cpp \
         architectureproxy.cpp \
         family6arch.cpp \
-        bigclientcores.cpp
+        bigclientcores.cpp \
+        family5arch.cpp \
+        family4arch.cpp \
+        family11arch.cpp \
+        family15arch.cpp \
+        micarchitecture.cpp \
+        littlecores.cpp \
+        bigservercores.cpp \
+        ram.cpp \
+        qcustomplot.cpp
 
 
 HEADERS += \
@@ -45,7 +54,16 @@ HEADERS += \
         architecture.h \
         architectureproxy.h \
         family6arch.h \
-        bigclientcores.h
+        bigclientcores.h \
+        family5arch.h \
+        family4arch.h \
+        family11arch.h \
+        family15arch.h \
+        micarchitecture.h \
+        littlecores.h \
+        bigservercores.h \
+        ram.h \
+        qcustomplot.h
 
 
 
