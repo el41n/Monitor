@@ -2,7 +2,6 @@
 #include <QApplication>
 
 #include "cpu.h"
-#include "gpu.h"
 #include <QDebug>
 #include <iostream>
 #include <windows.h>

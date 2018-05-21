@@ -11,10 +11,9 @@ public:
     virtual int getUsage();
     void getUsageInThread(QThread &thread);
     void stop();
-    explicit Hardware(QObject *parent() = 0);
+    explicit Hardware(Hardware *_currentHardware, QObject *parent() = 0);
     virtual ~Hardware() {}
     //vurtual ~Hardware() {}
-    //void getUsageInThread(QThread &cpuThread);
     //virtual int getTemperature();
 
 public slots:
@@ -26,6 +25,7 @@ signals:
     //void getProcessUsageSignal(int);
 
 private:
+    Hardware *currentHardware;
     bool stopUsage = false;
     int processID;
 };

@@ -1,7 +1,7 @@
 #include "hardware.h"
 #include <QObject>
 #include <QThread>
-#include <qthread.h>
+#include <QDebug>
 using namespace std;
 #include "ram.h"
 
@@ -21,17 +21,17 @@ void Hardware::stop()
     stopUsage = true;
 }
 
-Hardware::Hardware(QObject *parent())
+Hardware::Hardware(Hardware *_currentHardware, QObject *parent())
 {
-
+    this->currentHardware = _currentHardware;
 }
 
-void Hardware::getUsageSlot()-
+void Hardware::getUsageSlot()
 {
     while(!stopUsage)
     {
-        QThread::sleep(1000);
-        int currentUsage = getUsage();
+        QThread::sleep(1);
+        int currentUsage = this->currentHardware->getUsage();
         emit getUsageSignal(currentUsage);
     }
 }

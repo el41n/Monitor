@@ -88,9 +88,10 @@ void MainWindow::numchange(int number)
         cpuUsageVector.append(number);
     }
     ui->CPUPlot->graph(0)->setData(cpuTimeVector, cpuUsageVector);
-    ui->CPUProgressBar->setValue(number);
-    ui->CPUpercent->setText(QString::number(number)+"%");
     ui->CPUPlot->replot();
+
+    ui->CPUProgressBar->setValue(number);
+    ui->CPUpercent->setText("CPU\n"+QString::number(number)+"%");
 }
 
 void MainWindow::ramUsageChange(int number)
@@ -106,9 +107,10 @@ void MainWindow::ramUsageChange(int number)
         ramUsageVector.append(number);
     }
     ui->RAMPlot->graph(0)->setData(ramTimeVector, ramUsageVector);
-    ui->RAMProgressBar->setValue(number);
-    ui->RamPercent->setText(QString::number(number)+"%");
     ui->RAMPlot->replot();
+
+    ui->RAMProgressBar->setValue(number);
+    ui->RamPercent->setText("RAM\n"+QString::number(number)+"%");
 }
 
 //void MainWindow::procchange(int number)

@@ -28,7 +28,6 @@ SOURCES += \
         mainwindow.cpp \
         hardware.cpp \
         cpu.cpp \
-        gpu.cpp \
         systemInfo.cpp \
         architecture.cpp \
         architectureproxy.cpp \
@@ -49,7 +48,6 @@ HEADERS += \
         mainwindow.h \
         hardware.h \
         cpu.h \
-        gpu.h \
         systemInfo.h \
         architecture.h \
         architectureproxy.h \

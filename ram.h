@@ -9,20 +9,9 @@ class RAM : public Hardware
 {
 public:
     int getUsage();
-    //void getUsageInThread(QThread &thread);
-    //void stop();
-
-    explicit RAM(QObject *parent = 0);
-    virtual ~RAM() {};
-
-public slots:
-    //void getUsageSlot();
-
-signals:
-    //void getUsageSignal(int);
+    RAM();
 
 private:
-    //bool stopUsage = false;
     int processID;
 };
 

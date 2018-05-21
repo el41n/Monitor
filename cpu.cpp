@@ -1,17 +1,18 @@
 #include "cpu.h"
-
-using namespace std;
-#include <windows.h>
 #include <exception>
 #include <QObject>
 #include <QThread>
 #include <QDebug>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 
 int CPU::getUsage()
 {
+#ifdef _WIN32
     //sys times
-    FILETIME idleTime;//waiting timr
+    FILETIME idleTime;//waiting time
     FILETIME kernelTime;//exec kernel
     FILETIME userTime;//exec user progr
     //sys times for difference
@@ -76,46 +77,48 @@ int CPU::getUsage()
 
     int cpu_int = int(cpu.QuadPart);
     return cpu_int;
+#endif
 }
 
-void CPU::stop()
-{
-    stopUsage = true;
-}
+//void CPU::stop()
+//{
+//    stopUsage = true;
+//}
 
-void CPU::getUsageSlot()
-{
-    while(!stopUsage)
-    {
-        int currentUsage = getUsage();
-        emit getUsageSignal(currentUsage);
-    }
-}
+//void CPU::getUsageSlot()
+//{
+//    while(!stopUsage)
+//    {
+//        int currentUsage = getUsage();
+//        emit getUsageSignal(currentUsage);
+//    }
+//}
 
-void CPU::getProcessUsageSlot()
-{
-    while(!stopUsage)
-    {
-        //Sleep(250);
-        int currentUsage = getProcessUsage(processID);
-        qDebug() << currentUsage;
-        emit getProcessUsageSignal(currentUsage);
-    }
-}
+//void CPU::getProcessUsageSlot()
+//{
+//    while(!stopUsage)
+//    {
+//        //Sleep(250);
+//        int currentUsage = getProcessUsage(processID);
+//        qDebug() << currentUsage;
+//        emit getProcessUsageSignal(currentUsage);
+//    }
+//}
 
-void CPU::getUsageInThread(QThread &thread)
-{
-    connect(&thread, SIGNAL(started()), this, SLOT(getUsageSlot()));
-}
+//void CPU::getUsageInThread(QThread &thread)
+//{
+//    connect(&thread, SIGNAL(started()), this, SLOT(getUsageSlot()));
+//}
 
-void CPU::getProcessUsageInThread(QThread &cpuThread, int processID)
-{
-    connect(&cpuThread, SIGNAL(started()), this, SLOT(getProcessUsageSlot()));
-    this->processID = processID;
-}
+//void CPU::getProcessUsageInThread(QThread &cpuThread, int processID)
+//{
+//    connect(&cpuThread, SIGNAL(started()), this, SLOT(getProcessUsageSlot()));
+//    this->processID = processID;
+//}
 
 int CPU::getProcessUsage(int procID)
 {
+#ifdef _WIN32
     //sys times
     FILETIME idleTime;//waiting timr
     FILETIME kernelTime;//exec kernel
@@ -221,9 +224,10 @@ int CPU::getProcessUsage(int procID)
 
     int cpu_usage = int(procPerf.QuadPart);
     return cpu_usage;
+#endif
 }
 
-CPU::CPU(QObject *parent) : QObject(parent)
+CPU::CPU() : Hardware(this)
 {
 
 }
