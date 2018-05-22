@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui opengl
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = Monitor
 TEMPLATE = app
@@ -28,7 +28,6 @@ SOURCES += \
         mainwindow.cpp \
         hardware.cpp \
         cpu.cpp \
-        systemInfo.cpp \
         architecture.cpp \
         architectureproxy.cpp \
         family6arch.cpp \
@@ -48,7 +47,6 @@ HEADERS += \
         mainwindow.h \
         hardware.h \
         cpu.h \
-        systemInfo.h \
         architecture.h \
         architectureproxy.h \
         family6arch.h \

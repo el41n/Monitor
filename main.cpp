@@ -4,8 +4,7 @@
 #include "cpu.h"
 #include <QDebug>
 #include <iostream>
-#include <windows.h>
-#include "systemInfo.h"
+
 #include "architectureproxy.h"
 #include "ram.h"
 

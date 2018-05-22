@@ -11,6 +11,9 @@ class CPU : public Hardware
 public:
     int getUsage();
     int getProcessUsage(int procHandler);
+#ifdef linux
+    void init();
+#endif
     //void getUsageInThread(QThread &thread);
     //void getProcessUsageInThread(QThread &cpuThread, int processID);
     //void stop();
@@ -26,8 +29,10 @@ signals:
     void getProcessUsageSignal(int);
 
 private:
+
     //bool stopUsage = false;
     int processID;
 };
+
 
 #endif // CPU_H

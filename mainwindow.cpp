@@ -1,6 +1,6 @@
 #include "mainwindow.h"
+#include <GL/gl.h>
 #include "ui_mainwindow.h"
-
 #include "cpu.h"
 #include "ram.h"
 #include<QThread>
