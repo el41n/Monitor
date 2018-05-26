@@ -29,7 +29,9 @@ QVector<double> RAM::getUsage()
     long long memUsed = mem.totalram - mem.freeram;
     memUsed *= mem.mem_unit;
     memUsed = (double)memUsed / (double)mem.totalram * 100;
-    return memUsed;
+    QVector<double> usage;
+    usage.append((int)memUsed);
+    return usage;;
 #endif
 }
 

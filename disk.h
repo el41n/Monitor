@@ -12,17 +12,15 @@ public:
     QVector<double> getUsage();
     static int getDiskAmount();
     QVector<QString> getDiskNames();
-    QVector<double> getTotalSpace();
     Disk();
     ~Disk();
 private:
+    static void getDiskNames(int &bufSize, char** buf);
+    static QVector<QString> diskNames;
 #ifdef _WIN32
     static int objectNumber;
     QVector<wchar_t *> diskString;
-    static void getDiskNames(int &bufSize, char** buf);
     static QVector<QString> parseDisks(int bufSize, char* buf);
-    static QVector<QString> diskNames;
-    QVector<double> totalSpace;
 #endif
 };
 

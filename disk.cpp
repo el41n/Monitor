@@ -3,8 +3,14 @@
 #include <QVector>
 #include "windows.h"
 int Disk::objectNumber=0;
-QVector<QString> Disk::diskNames;
+#elif linux
+#include <mntent.h>
+#include <sys/statvfs.h>
 #endif
+QVector<QString> Disk::diskNames;
+#include <QDebug>
+#include <QString>
+
 
 QVector<double> Disk::getUsage()
 {
@@ -31,11 +37,30 @@ QVector<double> Disk::getUsage()
         }
     }
     return usage;
+#elif linux
+    QVector<double> usage;
+    struct statvfs str;
+    for(int i =0; i < diskNames.size(); i++)
+    {
+        int error = statvfs(diskNames[i].toStdString().c_str(), &str);
+        if(error != 0)
+        {
+            usage.append(-1);
+            usage.append(-1);
+        }
+        else
+        {
+            usage.append(str.f_favail / (double)1024/1024/1024 * str.f_bsize);
+            usage.append(str.f_blocks / (double)1024/1024/1024 * str.f_bsize);
+        }
+    }
+    return usage;
 #endif
 }
 
 int Disk::getDiskAmount()
 {
+#ifdef _WIN32
     if(diskNames.isEmpty())
     {
         int bufSize = 0;
@@ -45,6 +70,29 @@ int Disk::getDiskAmount()
         delete[] buf;
     }
     return diskNames.size();
+#elif linux
+    struct mntent *ent;
+    FILE *aFile;
+    diskNames.clear();
+
+    aFile = setmntent("/proc/mounts", "r");
+    if (aFile == NULL) {
+      perror("setmntent");
+      exit(1);
+    }
+    QString mountName;
+    while (NULL != (ent = getmntent(aFile))) {
+        mountName = ent->mnt_fsname;
+        if(mountName.startsWith("/dev"))
+        {
+            mountName = ent->mnt_dir;
+            qDebug() << ent->mnt_dir;
+            diskNames.append(mountName);
+        }
+    }
+    endmntent(aFile);
+    return diskNames.size();
+#endif
 }
 
 QVector<QString> Disk::getDiskNames()
@@ -52,10 +100,6 @@ QVector<QString> Disk::getDiskNames()
     return diskNames;
 }
 
-QVector<double> Disk::getTotalSpace()
-{
-
-}
 
 Disk::Disk() : Hardware(this)
 {
@@ -63,6 +107,7 @@ Disk::Disk() : Hardware(this)
     {
         getDiskAmount();
     }
+#ifdef _win32
     diskString.clear();
     for(int i = 0; i < diskNames.size(); i++)
     {
@@ -70,6 +115,9 @@ Disk::Disk() : Hardware(this)
         diskNames[i].toWCharArray(diskString[i]);
         diskString[i][diskNames[i].size()] = '\0';
     }
+#elif linux
+
+#endif
 //    diskString = new wchar_t[diskNames[objectNumber].size()+1];
 //    diskNames[objectNumber].toWCharArray(diskString);
 //    diskString[diskNames[1].size()] = '\0';

@@ -112,7 +112,9 @@ QVector<double> CPU::getUsage()
     lastTotalSys = totalSys;
     lastTotalIdle = totalIdle;
 
-    return (int)percent;
+    QVector<double> usage;
+    usage.append(percent);
+    return usage;
 }
 #endif
 
