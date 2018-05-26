@@ -3,13 +3,11 @@
 
 #include "family6arch.h"
 
-class LittleCores : Family6Arch
+class LittleCores : public Family6Arch
 {
 public:
     LittleCores();
-private:
     bool mapArchitecture();
-
 };
 
 #endif // LITTLECORES_H

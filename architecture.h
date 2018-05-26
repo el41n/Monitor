@@ -1,3 +1,4 @@
+
 #ifndef ARCHITECTURE_H
 #define ARCHITECTURE_H
 
@@ -14,9 +15,6 @@ public:
     void setMicroArchitecture(QString newMicroArchitecture);
     void setCore(QString newCore);
     virtual bool mapArchitecture()=0;
-
-    //unsigned int getProcToplogy();
-
     unsigned int getProcCores();
     unsigned int getCacheL1DataInfo();
     unsigned int getCacheL1InstructionInfo();
@@ -47,9 +45,6 @@ protected:
     QString microArchitecture;
     QString vendorMessage;
     bool matched;
-
-
-
 };
 
 #endif // ARCHITECTURE_H

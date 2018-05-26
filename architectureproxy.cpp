@@ -18,18 +18,17 @@ ArchitectureProxy::ArchitectureProxy()
         pcArhitecture = new Family6Arch();
         break;
     }
-
     pcArhitecture->calculateProcToplogy();
     pcArhitecture->calculateVendorMessage();
-    pcArhitecture->mapArchitecture();
+    mapArchitecture();
     pcArhitecture->calculateProcCores();
     pcArhitecture->calculateCacheInfo();
 }
 
 bool ArchitectureProxy::mapArchitecture()
 {
-    if(pcArhitecture->mapArchitecture())
+    if(!pcArhitecture->mapArchitecture())
     {
-
+        throw std::runtime_error("Error architecture not find. Compatable only with Intel processors.");
     }
 }

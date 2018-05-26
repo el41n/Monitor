@@ -23,13 +23,9 @@ bool MICArchitecture::mapArchitecture()
                   setCore("KL");
                   return true;
               }
-          } else return false;
-      } else return false;
-    } else return false;
-    return true;
+          }
+      }
+    }
+    return false;
 }
 
-MICArchitecture::MICArchitecture()
-{
-
-}

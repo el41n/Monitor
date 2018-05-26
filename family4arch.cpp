@@ -13,25 +13,25 @@ bool Family4Arch::mapArchitecture()
               switch (model) {
               case 0x9:
                   setCore("80486DX4");
-                  break;
+                  return true;
               case 0x8:
                   setCore("80486DX4");
-                  break;
+                  return true;
               case 0x7:
                   setCore("80486SL");
-                  break;
+                  return true;
               case 0x5:
                   setCore("80486SL");
-                  break;
+                  return true;
               case 0x4:
                   setCore("80486SL");
-                  break;
+                  return true;
               case 0x3:
                   setCore("80486DX2");
-                  break;
+                  return true;
               case 0x2:
                   setCore("80486SX");
-                  break;
+                  return true;
               case 0x1:
                   setCore("80486DX");
                   break;
@@ -39,8 +39,7 @@ bool Family4Arch::mapArchitecture()
                   return false;
                   break;
               }
-          } else return false;
-      } else return false;
-    } else return false;
-    return true;
+          }
+      }
+    }
 }

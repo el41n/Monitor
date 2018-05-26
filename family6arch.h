@@ -12,7 +12,8 @@ public:
     Family6Arch();
 private:
     bool map6Architecture();
-    Family6Arch *bcCore;
+    Family6Arch *coreMicroArch;
+    void setArch();
     //Family6Arch arch;
 protected:
     bool mapArchitecture();

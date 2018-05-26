@@ -19,7 +19,6 @@
 #define bit_F16C	(1 << 29)
 #define bit_RDRND	(1 << 30)
 
-/* %edx */
 #define bit_CMPXCHG8B	(1 << 8)
 #define bit_CMOV	(1 << 15)
 #define bit_MMX		(1 << 23)
@@ -27,8 +26,6 @@
 #define bit_SSE		(1 << 25)
 #define bit_SSE2	(1 << 26)
 
-/* Extended Features (%eax == 0x80000001) */
-/* %ecx */
 #define bit_LAHF_LM	(1 << 0)
 #define bit_ABM		(1 << 5)
 #define bit_SSE4a	(1 << 6)
@@ -39,18 +36,14 @@
 #define bit_TBM         (1 << 21)
 #define bit_MWAITX      (1 << 29)
 
-/* %edx */
 #define bit_MMXEXT	(1 << 22)
 #define bit_LM		(1 << 29)
 #define bit_3DNOWP	(1 << 30)
 #define bit_3DNOW	(1u << 31)
 
-/* %ebx  */
 #define bit_CLZERO	(1 << 0)
 #define bit_WBNOINVD	(1 << 9)
 
-/* Extended Features (%eax == 7) */
-/* %ebx */
 #define bit_FSGSBASE	(1 << 0)
 #define bit_SGX (1 << 2)
 #define bit_BMI	(1 << 3)
@@ -73,7 +66,6 @@
 #define bit_AVX512BW	(1 << 30)
 #define bit_AVX512VL	(1u << 31)
 
-/* %ecx */
 #define bit_PREFETCHWT1	  (1 << 0)
 #define bit_AVX512VBMI	(1 << 1)
 #define bit_PKU	(1 << 3)
@@ -90,16 +82,15 @@
 #define bit_MOVDIRI	(1 << 27)
 #define bit_MOVDIR64B	(1 << 28)
 
-/* %edx */
 #define bit_AVX5124VNNIW (1 << 2)
 #define bit_AVX5124FMAPS (1 << 3)
 #define bit_IBT	(1 << 20)
 #define bit_PCONFIG	(1 << 18)
-/* XFEATURE_ENABLED_MASK register bits (%eax == 13, %ecx == 0) */
+
 #define bit_BNDREGS     (1 << 3)
 #define bit_BNDCSR      (1 << 4)
 
-/* Extended State Enumeration Sub-leaf (%eax == 13, %ecx == 1) */
+
 #define bit_XSAVEOPT	(1 << 0)
 #define bit_XSAVEC	(1 << 1)
 #define bit_XSAVES	(1 << 3)
@@ -114,21 +105,12 @@
        : "=a" (a), "=b" (b), "=c" (c), "=d" (d)	\
        : "0" (level), "2" (count))
 
-
-/* Return highest supported input value for cpuid instruction.  ext can
-   be either 0x0 or 0x80000000 to return highest supported value for
-   basic or extended cpuid information.  Function returns 0 if cpuid
-   is not supported or whatever cpuid returns in eax register.  If sig
-   pointer is non-null, then first four bytes of the signature
-   (as found in ebx register) are returned in location pointed by sig.  */
-
 static __inline unsigned int
 __get_cpuid_max (unsigned int __ext, unsigned int *__sig)
 {
   unsigned int __eax, __ebx, __ecx, __edx;
 
 #ifndef __x86_64__
-  /* See if we can use cpuid.  On AMD64 we always can.  */
 #if __GNUC__ >= 3
   __asm__ ("pushf{l|d}\n\t"
        "pushf{l|d}\n\t"
@@ -143,8 +125,6 @@ __get_cpuid_max (unsigned int __ext, unsigned int *__sig)
        : "=&r" (__eax), "=&r" (__ebx)
        : "i" (0x00200000));
 #else
-/* Host GCCs older than 3.0 weren't supporting Intel asm syntax
-   nor alternatives in i386 code.  */
   __asm__ ("pushfl\n\t"
        "pushfl\n\t"
        "popl\t%0\n\t"
@@ -163,7 +143,6 @@ __get_cpuid_max (unsigned int __ext, unsigned int *__sig)
     return 0;
 #endif
 
-  /* Host supports cpuid.  Return highest supported cpuid input value.  */
   __cpuid (__ext, __eax, __ebx, __ecx, __edx);
 
   if (__sig)
@@ -171,11 +150,6 @@ __get_cpuid_max (unsigned int __ext, unsigned int *__sig)
 
   return __eax;
 }
-
-/* Return cpuid data for requested cpuid leaf, as found in returned
-   eax, ebx, ecx and edx registers.  The function checks if cpuid is
-   supported and returns 1 for valid cpuid information or 0 for
-   unsupported cpuid leaf.  All pointers are required to be non-null.  */
 
 static __inline int
 __get_cpuid (unsigned int __leaf,
@@ -192,7 +166,6 @@ __get_cpuid (unsigned int __leaf,
   return 1;
 }
 
-/* Same as above, but sub-leaf can be specified.  */
 
 static __inline int
 __get_cpuid_count (unsigned int __leaf, unsigned int __subleaf,
@@ -217,7 +190,7 @@ void Architecture::calculateVendorMessage()
     int error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+       throw std::runtime_error("Error on executong vendor message");
     }
     QString mes;
     mes.append(registerToMessage(a));
@@ -228,7 +201,7 @@ void Architecture::calculateVendorMessage()
     error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+       throw std::runtime_error("Error on executing vendor message");
     }
     mes.append(registerToMessage(a));
     mes.append(registerToMessage(b));
@@ -238,7 +211,7 @@ void Architecture::calculateVendorMessage()
     error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+        throw std::runtime_error("Error on executing vendor message");
     }
     mes.append(registerToMessage(a));
     mes.append(registerToMessage(b));
@@ -284,7 +257,7 @@ void Architecture::calculateProcToplogy()
     int error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+        throw std::runtime_error("Error on executing processot topology");
     }
     unsigned int buffer = 0;
 
@@ -328,7 +301,7 @@ void Architecture::calculateCacheInfo()
     int error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+        throw std::runtime_error("Error on executoig cache size");
     }
 
     unsigned int buffer = b;
@@ -343,7 +316,7 @@ void Architecture::calculateCacheInfo()
             int error = __get_cpuid_count(leaf, subleaf,&a,&b,&c,&d);
             if(!error)
             {
-               //
+                throw std::runtime_error("Error on executoig cache size");
             }
 
             unsigned int ways, partitions, lineSize, sets, cache;
@@ -393,7 +366,7 @@ void Architecture::calculateProcCores()
     int error = __get_cpuid(leaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+        throw std::runtime_error("Error on executoig proc cores");
     }
 
     unsigned int corePlusSMTIDMaxCnt;
@@ -407,7 +380,7 @@ void Architecture::calculateProcCores()
     error = __get_cpuid_count(leaf,subleaf,&a,&b,&c,&d);
     if(!error)
     {
-       //
+        throw std::runtime_error("Error on executoig proc cores");
     }
 
     unsigned int coreIDMaxCnt;
@@ -457,4 +430,3 @@ unsigned int Architecture::getProcCores()
 {
     return cores;
 }
-

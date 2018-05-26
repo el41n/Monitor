@@ -111,8 +111,8 @@ bool LittleCores::mapArchitecture()
               default:
                   break;
               }
-          } else return false;
-      } else return false;
-    } else return false;
-    return true;
+          }
+      }
+    }
+    return false;
 }

@@ -3,7 +3,7 @@
 
 #include "family6arch.h"
 
-class BigServerCores : Family6Arch
+class BigServerCores : public Family6Arch
 {
 public:
     BigServerCores();

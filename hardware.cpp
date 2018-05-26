@@ -6,7 +6,7 @@ using namespace std;
 #include "ram.h"
 
 
-int Hardware::getUsage()
+QVector<double> Hardware::getUsage()
 {
 
 }
@@ -31,7 +31,7 @@ void Hardware::getUsageSlot()
     while(!stopUsage)
     {
         QThread::sleep(1);
-        int currentUsage = this->currentHardware->getUsage();
+        QVector<double> currentUsage = this->currentHardware->getUsage();
         emit getUsageSignal(currentUsage);
     }
 }

@@ -4,31 +4,30 @@
 #include "cpu.h"
 #include <QDebug>
 #include <iostream>
-
+#include <windows.h>
 #include "architectureproxy.h"
 #include "ram.h"
+
+#include "disk.h"
 
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    qRegisterMetaType<QVector<double> >("tuple");
 
-
-//    ArchitectureProxy ax = ArchitectureProxy();
-
-//    qDebug() << ax.vendorMessage();
-//    ax.mapArchitecture();
-//    qDebug() << ax.getMicroArchitecture();
-//    qDebug() << ax.getCore();
-//    //qDebug() << ax.getMicroArchitecture();
-//    systemInformation s = systemInformation();
-//    s.getProcInfo();
     QApplication a(argc, argv);
-    //SYSTEM_INFO sysInfo;
-    //GetSystemInfo(&sysInfo);
-    MainWindow w;
-    w.show();
+    try
+    {
+        MainWindow w;
+        w.show();
+          return a.exec();
+    }
+    catch(std::runtime_error err)
+    {
+        err.what();
+    }
 
-    return a.exec();
+
 }

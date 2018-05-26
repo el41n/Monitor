@@ -1,27 +1,47 @@
 #include "family6arch.h"
 #include "micarch.h"
 #include "bigclientcores.h"
+#include "bigservercores.h"
+#include "littlecores.h"
+#include "micarchitecture.h"
 
 Family6Arch::Family6Arch()
 {
 
 }
 
+void Family6Arch::setArch()
+{
+    this->setMicroArchitecture(coreMicroArch->getMicroArchitecture());
+    this->setCore(coreMicroArch->getCore());
+}
+
 bool Family6Arch::mapArchitecture()
 {
-    bcCore = new BigClientCores();
-
-    if(bcCore->mapArchitecture())
+    coreMicroArch = new BigClientCores();
+    if(coreMicroArch->mapArchitecture())
     {
-        this->setMicroArchitecture(bcCore->getMicroArchitecture());
-        this->setCore(bcCore->getCore());
+        setArch();
         return true;
-    } else
-    {
-        this->setMicroArchitecture("Unknown");
-        this->setCore("Unknown");
-        return false;
     }
-
-    delete bcCore;
+    delete coreMicroArch;
+    coreMicroArch = new BigServerCores();
+    {
+        setArch();
+        return true;
+    }
+    delete coreMicroArch;
+    coreMicroArch = new LittleCores();
+    {
+        setArch();
+        return true;
+    }
+    delete coreMicroArch;
+    coreMicroArch = new MICArchitecture();
+    {
+        setArch();
+        return true;
+    }
+    delete coreMicroArch;
+    return false;
 }

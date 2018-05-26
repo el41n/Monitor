@@ -11,8 +11,7 @@
     static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
 #endif
 
-
-int CPU::getUsage()
+QVector<double> CPU::getUsage()
 {
 #ifdef _WIN32
     //sys times
@@ -28,13 +27,13 @@ int CPU::getUsage()
     BOOL error = GetSystemTimes( &idleTime, &kernelTime, &userTime );
     if(error != ERROR_SUCCESS)
     {
-        //throw exc
+        throw std::runtime_error("Error on executing proc utilization");
     }
     Sleep(1000);
     error = GetSystemTimes( &idleTimeWaited, &kernelTimeWaited, &userTimeWaited );
     if(error != ERROR_SUCCESS)
     {
-        //throw std::system_error;
+        throw std::runtime_error("Error on executing proc utilization");
     }
 
     _ULARGE_INTEGER kernel;
@@ -80,7 +79,11 @@ int CPU::getUsage()
     cpu.QuadPart = int(cpu.QuadPart / sys.QuadPart);
 
     int cpu_int = int(cpu.QuadPart);
-    return cpu_int;
+    QVector<double> usage;
+    usage.append(cpu_int);
+    return usage;
+}
+
 #elif linux
 
     double percent;
@@ -94,8 +97,7 @@ int CPU::getUsage()
 
     if (totalUser < lastTotalUser || totalUserLow < lastTotalUserLow ||
         totalSys < lastTotalSys || totalIdle < lastTotalIdle){
-        //Overflow detection. Just skip this value.
-        percent = -1.0;
+        throw std::runtime_error("Error on executing proc utilization");
     }
     else{
         total = (totalUser - lastTotalUser) + (totalUserLow - lastTotalUserLow) +
@@ -151,117 +153,120 @@ int CPU::getUsage()
 //    this->processID = processID;
 //}
 
-int CPU::getProcessUsage(int procID)
-{
-#ifdef _WIN32
-    //sys times
-    FILETIME idleTime;//waiting timr
-    FILETIME kernelTime;//exec kernel
-    FILETIME userTime;//exec user progr
-    //sys times for difference
-    FILETIME idleTimeWaited;
-    FILETIME kernelTimeWaited;
-    FILETIME userTimeWaited;
+//int CPU::getProcessUsage(int procID)
+//{
+//#ifdef _WIN32
+//    //sys times
+//    FILETIME idleTime;//waiting timr
+//    FILETIME kernelTime;//exec kernel
+//    FILETIME userTime;//exec user progr
+//    //sys times for difference
+//    FILETIME idleTimeWaited;
+//    FILETIME kernelTimeWaited;
+//    FILETIME userTimeWaited;
 
-    //getting times
-    BOOL error = GetSystemTimes( &idleTime, &kernelTime, &userTime );
-    if(error != ERROR_SUCCESS)
-    {
-        //throw exc
-    }
-    Sleep(250);
-    error = GetSystemTimes( &idleTimeWaited, &kernelTimeWaited, &userTimeWaited );
-    if(error != ERROR_SUCCESS)
-    {
-        //throw std::system_error;
-    }
+//    //getting times
+//    BOOL error = GetSystemTimes( &idleTime, &kernelTime, &userTime );
+//    if(error != ERROR_SUCCESS)
+//    {
+//        //throw exc
+//    }
+//    Sleep(250);
+//    error = GetSystemTimes( &idleTimeWaited, &kernelTimeWaited, &userTimeWaited );
+//    if(error != ERROR_SUCCESS)
+//    {
+//        //throw std::system_error;
+//    }
 
-    _ULARGE_INTEGER kernel;
-    _ULARGE_INTEGER user;
+//    _ULARGE_INTEGER kernel;
+//    _ULARGE_INTEGER user;
 
-    _ULARGE_INTEGER kernel1;
-    _ULARGE_INTEGER user1;
-    //uses for calculate difference betwen two measures
-    _ULARGE_INTEGER kernelDif;
-    _ULARGE_INTEGER userDif;
+//    _ULARGE_INTEGER kernel1;
+//    _ULARGE_INTEGER user1;
+//    //uses for calculate difference betwen two measures
+//    _ULARGE_INTEGER kernelDif;
+//    _ULARGE_INTEGER userDif;
 
-    _ULARGE_INTEGER sys;//time exec user and kernel
+//    _ULARGE_INTEGER sys;//time exec user and kernel
 
-    kernel.HighPart = kernelTime.dwHighDateTime;
-    kernel.LowPart = kernelTime.dwLowDateTime;
-    user.HighPart = userTime.dwHighDateTime;
-    user.LowPart = userTime.dwLowDateTime;
+//    kernel.HighPart = kernelTime.dwHighDateTime;
+//    kernel.LowPart = kernelTime.dwLowDateTime;
+//    user.HighPart = userTime.dwHighDateTime;
+//    user.LowPart = userTime.dwLowDateTime;
 
-    kernel1.HighPart = kernelTimeWaited.dwHighDateTime;
-    kernel1.LowPart = kernelTimeWaited.dwLowDateTime;
-    user1.HighPart = userTimeWaited.dwHighDateTime;
-    user1.LowPart = userTimeWaited.dwLowDateTime;
+//    kernel1.HighPart = kernelTimeWaited.dwHighDateTime;
+//    kernel1.LowPart = kernelTimeWaited.dwLowDateTime;
+//    user1.HighPart = userTimeWaited.dwHighDateTime;
+//    user1.LowPart = userTimeWaited.dwLowDateTime;
 
-    kernelDif.QuadPart = kernel1.QuadPart -  kernel.QuadPart;
-    userDif.QuadPart = user1.QuadPart - user.QuadPart;
+//    kernelDif.QuadPart = kernel1.QuadPart -  kernel.QuadPart;
+//    userDif.QuadPart = user1.QuadPart - user.QuadPart;
 
-    sys.QuadPart = kernelDif.QuadPart + userDif.QuadPart;
+//    sys.QuadPart = kernelDif.QuadPart + userDif.QuadPart;
 
-    FILETIME procCreateTime;
-    FILETIME procExitTime;
-    FILETIME procKernelTime;
-    FILETIME procUserTime;
-    FILETIME procCreate1Time;
-    FILETIME procExit1Time;
-    FILETIME procKernel1Time;
-    FILETIME procUser1Time;
+//    FILETIME procCreateTime;
+//    FILETIME procExitTime;
+//    FILETIME procKernelTime;
+//    FILETIME procUserTime;
+//    FILETIME procCreate1Time;
+//    FILETIME procExit1Time;
+//    FILETIME procKernel1Time;
+//    FILETIME procUser1Time;
 
-    _ULARGE_INTEGER procKernel;
-    _ULARGE_INTEGER procUser;
-    _ULARGE_INTEGER procKernel1;
-    _ULARGE_INTEGER procUser1;
-    _ULARGE_INTEGER procPerf;
+//    _ULARGE_INTEGER procKernel;
+//    _ULARGE_INTEGER procUser;
+//    _ULARGE_INTEGER procKernel1;
+//    _ULARGE_INTEGER procUser1;
+//    _ULARGE_INTEGER procPerf;
 
-    _ULARGE_INTEGER procKernelDiff;
-    _ULARGE_INTEGER procUserDiff;
+//    _ULARGE_INTEGER procKernelDiff;
+//    _ULARGE_INTEGER procUserDiff;
 
 
-    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procID);
-    if (processHandle == NULL)
-    {
-        ;
-    }
+//    HANDLE processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procID);
+//    if (processHandle == NULL)
+//    {
+//        ;
+//    }
 
-    error = GetProcessTimes(processHandle, &procCreateTime, &procExitTime, &procKernelTime, &procUserTime);
-    if(error != ERROR_SUCCESS)
-    {
-        //throw exc
-    }
-    Sleep(250);
-    error = GetProcessTimes(processHandle, &procCreate1Time, &procExit1Time, &procKernel1Time, &procUser1Time);
-    if(error != ERROR_SUCCESS)
-    {
-        //throw exc
-    }
+//    error = GetProcessTimes(processHandle, &procCreateTime, &procExitTime, &procKernelTime, &procUserTime);
+//    if(error != ERROR_SUCCESS)
+//    {
+//        //throw exc
+//    }
+//    Sleep(250);
+//    error = GetProcessTimes(processHandle, &procCreate1Time, &procExit1Time, &procKernel1Time, &procUser1Time);
+//    if(error != ERROR_SUCCESS)
+//    {
+//        //throw exc
+//    }
 
-    procKernel.HighPart = procKernelTime.dwHighDateTime;
-    procKernel.LowPart = procKernelTime.dwLowDateTime;
+//    procKernel.HighPart = procKernelTime.dwHighDateTime;
+//    procKernel.LowPart = procKernelTime.dwLowDateTime;
 
-    procKernel1.HighPart = procKernel1Time.dwHighDateTime;
-    procKernel1.LowPart = procKernel1Time.dwLowDateTime;
+//    procKernel1.HighPart = procKernel1Time.dwHighDateTime;
+//    procKernel1.LowPart = procKernel1Time.dwLowDateTime;
 
-    procUser.HighPart = procUserTime.dwHighDateTime;
-    procUser.LowPart = procUserTime.dwLowDateTime;
+//    procUser.HighPart = procUserTime.dwHighDateTime;
+//    procUser.LowPart = procUserTime.dwLowDateTime;
 
-    procUser1.HighPart = procUser1Time.dwHighDateTime;
-    procUser1.LowPart = procUser1Time.dwLowDateTime;
+//    procUser1.HighPart = procUser1Time.dwHighDateTime;
+//    procUser1.LowPart = procUser1Time.dwLowDateTime;
 
-    procKernelDiff.QuadPart = procKernel1.QuadPart - procKernel.QuadPart;
-    procUserDiff.QuadPart = procUser1.QuadPart - procUser.QuadPart;
+//    procKernelDiff.QuadPart = procKernel1.QuadPart - procKernel.QuadPart;
+//    procUserDiff.QuadPart = procUser1.QuadPart - procUser.QuadPart;
 
-    procPerf.QuadPart = procKernelDiff.QuadPart + procUserDiff.QuadPart * 100;
-    procPerf.QuadPart = procPerf.QuadPart / sys.QuadPart;
+//    procPerf.QuadPart = procKernelDiff.QuadPart + procUserDiff.QuadPart * 100;
+//    procPerf.QuadPart = procPerf.QuadPart / sys.QuadPart;
 
-    int cpu_usage = int(procPerf.QuadPart);
-    return cpu_usage;
-#endif
-}
+//    int cpu_usage = int(procPerf.QuadPart);
+//    return cpu_usage;
+//#endif
+//}
 
+
+
+#ifdef linux
 void CPU::init()
 {
     FILE* file = fopen("/proc/stat", "r");
@@ -269,11 +274,16 @@ void CPU::init()
         &lastTotalSys, &lastTotalIdle);
     fclose(file);
 }
+#endif
 
 CPU::CPU() : Hardware(this)
 {
-#ifdef linux
-    init();
-#endif
+    return;
 }
+
+
+
+//#ifdef linux
+//    init();
+//#endif
 

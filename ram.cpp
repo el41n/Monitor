@@ -1,6 +1,7 @@
 #include "ram.h"
 #include <QObject>
 #include <QThread>
+#include <QVector>
 
 #ifdef _WIN32
 #include "windows.h"
@@ -11,7 +12,7 @@
 #endif
 
 
-int RAM::getUsage()
+QVector<double> RAM::getUsage()
 {
 #ifdef _WIN32
     MEMORYSTATUSEX mem;
@@ -19,7 +20,9 @@ int RAM::getUsage()
     GlobalMemoryStatusEx(&mem);
     DWORDLONG usedRAM = mem.ullTotalPhys - mem.ullAvailPhys;
     double ramUsage = (double)usedRAM / (double)mem.ullTotalPhys * 100;
-    return (int)ramUsage;
+    QVector<double> usage;
+    usage.append((int)ramUsage);
+    return usage;
 #elif linux
     struct sysinfo mem;
     sysinfo(&mem);

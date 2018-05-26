@@ -6,6 +6,8 @@
 #include <cpu.h>
 #include "architectureproxy.h"
 #include <ram.h>
+#include "disk.h"
+#include <QVector>
 
 namespace Ui {
 class MainWindow;
@@ -20,8 +22,9 @@ public:
     ~MainWindow();
 
 public slots:
-    void numchange(int number);
-    void ramUsageChange(int number);
+    void cpuUsageChange(QVector<double>);
+    void ramUsageChange(QVector<double>);
+    void diskUsageChange(QVector<double>);
     //void procchange(int number);
 
 signals:
@@ -37,10 +40,9 @@ private:
     QThread ramThread;
     QThread processThread;
     CPU cp;
-    CPU proc;
-    CPU p;
     RAM ram;
-
+    Disk disk;
+    QThread diskThread;
 
     QVector<double> cpuUsageVector;
     QVector<double> ramUsageVector;

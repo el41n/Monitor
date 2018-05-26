@@ -8,7 +8,7 @@ class Hardware : public QObject
   Q_OBJECT
 
 public:
-    virtual int getUsage();
+    virtual QVector<double> getUsage();
     void getUsageInThread(QThread &thread);
     void stop();
     explicit Hardware(Hardware *_currentHardware, QObject *parent() = 0);
@@ -21,13 +21,12 @@ public slots:
     //void getProcessUsageSlot();
 
 signals:
-    void getUsageSignal(int);
+    void getUsageSignal(QVector<double>);
     //void getProcessUsageSignal(int);
 
 private:
     Hardware *currentHardware;
     bool stopUsage = false;
-    int processID;
 };
 
 #endif // HARDWARE_H

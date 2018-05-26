@@ -13,33 +13,32 @@ bool Family5Arch::mapArchitecture()
               case 0x9:
                   setMicroArchitecture("Lakemount");
                   setCore("Quark");
-                  break;
+                  return true;
               case 0x8:
                   setMicroArchitecture("P5");
                   setCore("P55C(Mobile)");
-                  break;
+                  return true;
               case 0x7:
                   setMicroArchitecture("P5");
                   setCore("P55C(Mobile)");
-                  break;
+                  return true;
               case 0x4:
                   setMicroArchitecture("P5");
                   setCore("P55C");
-                  break;
+                  return true;
               case 0x2:
                   setMicroArchitecture("P5");
                   setCore("P54CS");
-                  break;
+                  return true;
               case 0x1:
                   setMicroArchitecture("P5");
                   setCore("P54");
-                  break;
+                  return true;
               default:
                   return false;
-                  break;
+                  return false;
               }
-          } else return false;
-      } else return false;
-    } else return false;
-    return true;
+          }
+      }
+    }
 }

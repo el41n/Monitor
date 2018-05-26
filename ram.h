@@ -8,7 +8,7 @@
 class RAM : public Hardware
 {
 public:
-    int getUsage();
+    QVector<double> getUsage();
     RAM();
 
 private:

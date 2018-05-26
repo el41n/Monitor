@@ -3,10 +3,9 @@
 
 #include "family6arch.h"
 
-class MICArchitecture : Family6Arch
+class MICArchitecture : public Family6Arch
 {
 public:
-    bool mapMICArchitecture();
     bool mapArchitecture();
     MICArchitecture();
 };

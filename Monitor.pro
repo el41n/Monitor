@@ -34,13 +34,12 @@ SOURCES += \
         bigclientcores.cpp \
         family5arch.cpp \
         family4arch.cpp \
-        family11arch.cpp \
-        family15arch.cpp \
         micarchitecture.cpp \
         littlecores.cpp \
         bigservercores.cpp \
         ram.cpp \
-        qcustomplot.cpp
+        qcustomplot.cpp \
+    disk.cpp
 
 
 HEADERS += \
@@ -53,13 +52,12 @@ HEADERS += \
         bigclientcores.h \
         family5arch.h \
         family4arch.h \
-        family11arch.h \
-        family15arch.h \
         micarchitecture.h \
         littlecores.h \
         bigservercores.h \
         ram.h \
-        qcustomplot.h
+        qcustomplot.h \
+    disk.h
 
 
 
